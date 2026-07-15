@@ -1,0 +1,33 @@
+fastapi
+uvicorn[standard]
+
+# LangChain core
+langchain
+langchain-core
+langchain-community
+langchain-text-splitters
+
+# LLM Providers
+langchain-openai
+langchain-anthropic
+langchain-google-genai
+
+# MCP
+langchain-mcp-adapters
+
+# Vector Database
+qdrant-client
+
+# Embeddings
+sentence-transformers
+
+# Redis
+redis
+
+# API / Config
+python-dotenv
+pydantic-settings
+
+# Evaluation later
+ragas
+langsmith
