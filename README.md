@@ -1,9 +1,6 @@
 <p align="center">
-  <img src="./docs/logo.png" alt="Aegis AI Logo" width="180">
+  <img src="./docs/logo.png" alt="Aegis AI Logo" width="400">
 </p>
-
-
-<h1 align="center">Aegis AI</h1>
 
 <p align="center">
 An Enterprise AI Platform for Technical Support powered by RAG, AI Agents and Model Context Protocol (MCP).
