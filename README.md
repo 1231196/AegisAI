@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="frontend/src/assets/logo.png" alt="Aegis AI" width="180"/>
+  <img src="./docs/logo.png" alt="Aegis AI Logo" width="180">
 </p>
 
 
