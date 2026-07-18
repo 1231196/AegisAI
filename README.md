@@ -1,253 +1,133 @@
-# Aegis AI
+<p align="center">
+  <img src=".frontend/src/assets/logo.png" alt="Aegis AI" width="180"/>
+</p>
 
-## Intelligent Technical Support Platform Powered by AI Agents, RAG and MCP
 
-Aegis AI is an AI-powered technical support platform designed to operate as a virtual Support Engineer.
+<h1 align="center">Aegis AI</h1>
 
-The goal of this project is to build a production-oriented AI system capable of understanding technical questions, retrieving information from internal knowledge bases, interacting with external systems, and executing controlled actions through AI Agents and the Model Context Protocol (MCP).
+<p align="center">
+An Enterprise AI Platform for Technical Support powered by RAG, AI Agents and Model Context Protocol (MCP).
+</p>
 
-Unlike traditional chatbots, Aegis AI combines Retrieval-Augmented Generation (RAG), autonomous AI Agents, Tool Calling, and enterprise-grade security mechanisms to provide reliable, context-aware, and actionable technical assistance.
+<p align="center">
+
+![Status](https://img.shields.io/badge/status-In%20Development-32CD32)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
+
+</p>
 
 ---
 
 # Overview
 
-Modern companies rely on large amounts of technical knowledge distributed across multiple sources:
+Aegis AI is an enterprise-oriented AI platform designed to demonstrate modern AI Engineering practices.
 
-- Technical documentation
-- API references
-- Runbooks
-- FAQs
-- Historical support tickets
-- System logs
-- Internal knowledge bases
-- Customer information
+The project combines Retrieval-Augmented Generation (RAG), AI Agents, Tool Calling, and the Model Context Protocol (MCP) to build an intelligent technical support assistant capable of understanding documentation, interacting with enterprise systems, and assisting users through natural language.
 
-Aegis AI aims to reduce the manual effort required to find and process this information by providing an intelligent assistant capable of searching, reasoning, and interacting with enterprise systems.
+This project is being developed as a portfolio project to showcase scalable software architecture, modern AI development, and production-ready engineering practices.
 
 ---
 
-# Core Features
+# Project Goals
 
-## Knowledge Base Management
-
-The platform supports the ingestion and processing of multiple document formats:
-
-- PDF
-- DOCX
-- Markdown
-- TXT
-- CSV
-- API documentation
-- Internal knowledge sources
-
-Documents are automatically processed, indexed, and made available through the AI retrieval pipeline.
+- Build a production-ready AI architecture
+- Implement an advanced RAG pipeline
+- Develop autonomous AI Agents
+- Integrate external tools using MCP
+- Support multi-tenant organizations
+- Secure AI interactions through RBAC and approval workflows
+- Demonstrate AI observability and evaluation
 
 ---
 
-## Advanced Retrieval-Augmented Generation (RAG)
+# Planned Features
 
-Aegis AI implements an advanced RAG pipeline to ensure responses are generated using relevant and verified information.
+### Authentication
 
-The pipeline includes:
+- JWT Authentication
+- User Registration
+- Organizations
+- Role-Based Access Control
 
-- Document processing
-- Intelligent chunking strategies
-- Embeddings generation
-- Vector search
-- Hybrid Search (semantic + keyword retrieval)
-- Cross-Encoder re-ranking
-- Context filtering
-- Source-based response generation
+### Knowledge Base
 
-Each generated answer includes:
+- PDF Upload
+- DOCX Support
+- Markdown Support
+- Automatic Chunking
+- Embeddings
+- Vector Search
 
-- Retrieved documents
-- Relevant context excerpts
-- Source references
-- Confidence information
+### AI Chat
+
+- Conversational Assistant
+- Source Attribution
+- Conversation History
+- Streaming Responses
+
+### AI Agents
+
+- Tool Calling
+- Autonomous Reasoning
+- External Integrations
+- Approval Workflows
+
+### MCP
+
+- MCP Server
+- Secure Tool Execution
+- Extensible Tool Registry
+
+### Observability
+
+- Request Monitoring
+- Token Usage
+- Cost Estimation
+- Performance Metrics
 
 ---
 
-## AI Agent Architecture
-
-The AI Agent acts as an autonomous technical assistant capable of reasoning about user requests and deciding when external actions are required.
-
-The agent can:
-
-- Analyze technical issues
-- Search internal documentation
-- Query external systems
-- Execute approved actions
-- Create support tickets
-- Retrieve operational information
-
-Example tools:
+# Planned Architecture
 
 ```
-orders.search
+                    React Frontend
 
-payments.status
+                           │
 
-logs.search
+                     FastAPI Backend
 
-tickets.create
+                           │
 
-users.search
+        ┌──────────────────┼──────────────────┐
 
-knowledge.search
-```
+        │                  │                  │
 
----
+     Authentication      AI Agent         RAG Pipeline
 
-## Model Context Protocol (MCP)
+        │                  │                  │
 
-Aegis AI uses the Model Context Protocol as the communication layer between the AI Agent and external tools.
+        └──────────────┬───┴──────────────────┘
 
-MCP provides:
+                       │
 
-- Standardized tool integration
-- Secure execution boundaries
-- Clear separation between AI reasoning and business logic
-- Easy extensibility for new capabilities
+                  MCP Tool Server
 
-Architecture example:
+                       │
 
-```
-AI Agent
+        ┌──────────────┼──────────────┐
 
-     |
+        │              │              │
 
- MCP Server
+     Knowledge      Ticketing      External APIs
 
-     |
+                       │
 
-+------------+------------+------------+
-|            |            |            |
-Orders     Payments      Logs      Tickets
-```
-
----
-
-## AI Security
-
-Security is a core component of the platform.
-
-Implemented protections include:
-
-- Prompt Injection detection
-- Tool Injection prevention
-- Jailbreak mitigation
-- Organization data isolation
-- Role-based access control
-- Permission-based tool execution
-- Human approval workflows for sensitive operations
-
-Examples of actions requiring approval:
-
-- Order cancellation
-- Refund processing
-- User deletion
-
----
-
-## Model Routing and Optimization
-
-The platform supports dynamic model selection depending on task requirements.
-
-Examples:
-
-```
-Simple questions
-        |
-        v
-Fast lightweight model
-
-
-Complex reasoning
-        |
-        v
-Advanced reasoning model
-
-
-Code-related requests
-        |
-        v
-Code-specialized model
-```
-
-This approach improves:
-
-- Response quality
-- Latency
-- Operational cost
-
----
-
-## Evaluation and Observability
-
-Aegis AI includes monitoring and evaluation capabilities to measure system reliability.
-
-Evaluation metrics:
-
-- Faithfulness
-- Context Precision
-- Context Recall
-- Answer Relevance
-
-
-Operational metrics:
-
-- Request latency
-- Token consumption
-- Model usage
-- Tool execution history
-- Error tracking
-- Estimated AI cost
-
-
-Technologies:
-
-- OpenTelemetry
-- Prometheus
-- Grafana
-
----
-
-# Architecture Overview
-
-```
-                         React Frontend
-
-                               |
-
-                         FastAPI Gateway
-
-                               |
-
-        +----------------------+----------------------+
-
-        |                      |                      |
-
-   RAG Service          AI Agent Service       Authentication Service
-
-        |                      |
-
-        |                      |
-
- Qdrant Vector DB        MCP Tool Server
-
-                               |
-
-              +----------------+----------------+
-
-              |                |                |
-
-           Orders           Logs          Payments
-
-
-                 PostgreSQL + Redis Cache
-
+        PostgreSQL • Redis • Qdrant
 ```
 
 ---
@@ -259,83 +139,107 @@ Technologies:
 - React
 - TypeScript
 - Tailwind CSS
-- Shadcn UI
-
+- shadcn/ui
 
 ## Backend
 
 - Python
 - FastAPI
-- LangChain
-
+- SQLAlchemy
+- Alembic
 
 ## Artificial Intelligence
 
-- Large Language Models (LLMs)
-- Retrieval-Augmented Generation (RAG)
+- RAG
 - AI Agents
+- MCP
 - Tool Calling
-- Model Context Protocol (MCP)
+- LLMs
 - Embeddings
-- Vector Search
-- Hybrid Search
-- Cross-Encoder Re-ranking
-
 
 ## Databases
 
 - PostgreSQL
-- Qdrant Vector Database
+- Qdrant
 - Redis
-
-
-## Observability
-
-- OpenTelemetry
-- Prometheus
-- Grafana
-
 
 ## Infrastructure
 
 - Docker
 - Docker Compose
 
+---
+
+# Project Structure
+
+```
+aegis-ai/
+
+├── backend/
+│   ├── app/
+│   ├── api/
+│   ├── auth/
+│   ├── agents/
+│   ├── rag/
+│   ├── mcp/
+│   └── core/
+│
+├── frontend/
+│
+├── docs/
+│
+├── docker/
+│
+├── tests/
+│
+└── README.md
+```
 
 ---
 
-# Project Objectives
+# Development Roadmap
 
-Aegis AI was developed to demonstrate modern AI Engineering practices used in production environments:
+## Phase 1
 
-- Designing scalable AI architectures
-- Building autonomous AI Agents
-- Implementing advanced RAG systems
-- Integrating external tools through MCP
-- Securing AI applications
-- Evaluating LLM performance
-- Monitoring AI-powered systems
+- [ ] Authentication
+- [ ] Organizations
+- [ ] PostgreSQL
+- [ ] React Frontend
+- [ ] Docker Environment
 
+## Phase 2
+
+- [ ] Document Upload
+- [ ] RAG Pipeline
+- [ ] AI Chat
+- [ ] Conversation History
+
+## Phase 3
+
+- [ ] AI Agents
+- [ ] MCP Integration
+- [ ] Tool Calling
+- [ ] Approval Workflows
+
+## Phase 4
+
+- [ ] Observability
+- [ ] AI Evaluation
+- [ ] Multi-model Routing
+- [ ] Production Deployment
 
 ---
 
-# Future Improvements
+# Current Status
 
-Potential extensions:
+🚧 This project is currently under active development.
 
-- Multi-model AI routing
-- Multimodal document understanding
-- Website knowledge ingestion
-- Voice assistant
-- Automated email generation
-- Planner-based agents
-- Automated model benchmarking
-
+The initial focus is on building a clean, scalable architecture that will support advanced AI capabilities in future iterations.
 
 ---
 
 # Author
 
-Rodrigo Faria
+**Rodrigo Faria**
 
-AI Engineering | Software Development | Cybersecurity
+AI Engineering • Software Engineering • Cybersecurity
