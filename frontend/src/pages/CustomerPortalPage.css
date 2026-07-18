@@ -1,0 +1,142 @@
+.aegis-customer-portal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 980px;
+}
+
+.aegis-customer-portal__hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  align-items: flex-end;
+  justify-content: space-between;
+}
+.aegis-customer-portal__hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.aegis-customer-portal__eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--brand-yellow);
+}
+.aegis-customer-portal__welcome {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+.aegis-customer-portal__subtitle {
+  color: var(--text-secondary);
+  font-size: 14px;
+  max-width: 56ch;
+  margin: 0;
+}
+.aegis-customer-portal__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.aegis-customer-portal__chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: var(--radius-pill);
+  background: var(--brand-yellow-soft);
+  color: var(--brand-yellow);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.aegis-customer-portal__chip--muted {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.aegis-customer-portal__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+}
+.aegis-customer-portal__card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  transition: border-color var(--transition-base),
+    transform var(--transition-fast);
+}
+.aegis-customer-portal__card:hover {
+  border-color: var(--border-default);
+  transform: translateY(-1px);
+}
+.aegis-customer-portal__card--accent {
+  border-color: var(--brand-yellow);
+  background: linear-gradient(
+    180deg,
+    var(--brand-yellow-soft) 0%,
+    var(--bg-card) 100%
+  );
+}
+.aegis-customer-portal__card-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.aegis-customer-portal__card-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin: 0;
+}
+.aegis-customer-portal__card-body {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 0;
+}
+.aegis-customer-portal__card-actions {
+  margin-top: var(--space-3);
+}
+
+.aegis-customer-portal__permissions {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+.aegis-customer-portal__permissions-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin: 0 0 var(--space-3) 0;
+}
+.aegis-customer-portal__permissions-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+  padding-left: var(--space-5);
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.aegis-customer-portal__signout-row {
+  display: flex;
+  justify-content: flex-end;
+}

@@ -1,0 +1,42 @@
+.aegis-auth-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-height: 100vh;
+  background: var(--bg-app);
+  background-image: radial-gradient(
+      1200px 600px at 80% 0%,
+      rgba(250, 204, 21, 0.06) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 500px at 0% 100%,
+      rgba(120, 90, 200, 0.05) 0%,
+      transparent 60%
+    );
+  background-attachment: fixed;
+}
+
+.aegis-auth-shell__main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-12) var(--space-8);
+  min-height: 100vh;
+}
+
+.aegis-auth-shell__panel {
+  width: 100%;
+  max-width: 460px;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 900px) {
+  .aegis-auth-shell {
+    grid-template-columns: 1fr;
+  }
+  .aegis-auth-shell__main {
+    padding: var(--space-8) var(--space-4);
+    align-items: flex-start;
+  }
+}

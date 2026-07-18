@@ -2,7 +2,12 @@ target-version = "py312"
 
 [lint]
 select = ["E", "F", "I", "UP", "N", "W"]
-ignore = ["E501"]
+# UP017: prefer `timezone.utc` over the Python 3.11+ `datetime.UTC` alias.
+# UP045: prefer `X | None` over `Optional[X]`. We use `Optional[...]`
+#        deliberately because Pydantic evaluates parameter annotations at
+#        runtime via PEP 563 stringified forms, and `str | None` cannot be
+#        evaluated on interpreters older than Python 3.10.
+ignore = ["E501", "UP017", "UP045"]
 
 [format]
 quote-style = "double"

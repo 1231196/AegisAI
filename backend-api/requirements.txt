@@ -5,3 +5,5 @@ psycopg[binary]
 redis
 python-dotenv
 pydantic-settings
+bcrypt
+pyjwt

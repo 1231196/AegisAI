@@ -1,0 +1,61 @@
+.aegis-error-fallback {
+  align-items: center;
+  background: var(--surface-app, #0e0e10);
+  color: var(--text-primary, #f5f5f7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4, 16px);
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--space-8, 32px);
+  text-align: center;
+}
+
+.aegis-error-fallback__eyebrow {
+  color: var(--color-accent, #ffc83d);
+  font-family: var(--font-display, inherit);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.aegis-error-fallback__title {
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.aegis-error-fallback__body {
+  color: var(--text-secondary, #a8a8ad);
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 0;
+  max-width: 36ch;
+}
+
+.aegis-error-fallback__button {
+  background: var(--color-accent, #ffc83d);
+  border: 0;
+  border-radius: var(--radius-md, 8px);
+  color: #1a1a1a;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: var(--space-2, 8px);
+  padding: 12px 22px;
+  transition:
+    background-color 120ms ease,
+    transform 120ms ease;
+}
+
+.aegis-error-fallback__button:hover {
+  background: #ffd367;
+  transform: translateY(-1px);
+}
+
+.aegis-error-fallback__button:focus-visible {
+  outline: 2px solid #ffc83d;
+  outline-offset: 2px;
+}

@@ -1,0 +1,176 @@
+.aegis-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: var(--sidebar-width);
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border-subtle);
+  padding: var(--space-6) var(--space-4);
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.aegis-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+
+.aegis-sidebar__brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.25;
+  min-width: 0;
+}
+
+.aegis-sidebar__brand-name {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--brand-yellow);
+}
+
+.aegis-sidebar__brand-subtitle {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+.aegis-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  margin: 0 calc(var(--space-4) * -1);
+  padding: 0 var(--space-4);
+}
+
+.aegis-sidebar__nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 9px 10px 9px 10px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  position: relative;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.aegis-sidebar__nav-item:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.aegis-sidebar__nav-item--active {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+/* Items that aren't yet routed to a real screen render as a softer
+ * row with no hover/active feedback — they read as "not actionable"
+ * rather than "broken". */
+.aegis-sidebar__nav-item--placeholder {
+  cursor: not-allowed;
+  opacity: 0.55;
+  color: var(--text-tertiary);
+}
+.aegis-sidebar__nav-item--placeholder:hover {
+  background: transparent;
+  color: var(--text-tertiary);
+}
+
+.aegis-sidebar__nav-dot {
+  width: 3px;
+  height: 14px;
+  border-radius: 2px;
+  background: transparent;
+  flex-shrink: 0;
+  margin-left: -10px;
+  margin-right: 7px;
+  transition: background var(--transition-fast);
+}
+
+.aegis-sidebar__nav-dot--active {
+  background: linear-gradient(180deg, #fde047, #f59e0b);
+  box-shadow: 0 0 8px rgba(250, 204, 21, 0.40);
+}
+
+.aegis-sidebar__nav-icon {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  color: currentColor;
+}
+.aegis-sidebar__nav-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.aegis-sidebar__nav-label {
+  flex: 1;
+  white-space: nowrap;
+}
+
+.aegis-sidebar__nav-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 18px;
+  min-width: 22px;
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
+  background: var(--border-default);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Visual divider above the admin-only section so the privilege-gated
+ * nav reads as a distinct region (label hidden until admin). */
+.aegis-sidebar__section-label {
+  margin: var(--space-4) var(--space-4) 4px;
+  padding: 0 10px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.aegis-sidebar__section-label::before {
+  content: "";
+  display: block;
+  height: 1px;
+  background: var(--border-subtle);
+  margin-bottom: var(--space-3);
+}
+
+.aegis-sidebar__footer {
+  margin-top: var(--space-4);
+  padding: var(--space-3) 0 0;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.aegis-sidebar__footer-row + .aegis-sidebar__footer-row {
+  margin-top: 4px;
+}
+
+.aegis-sidebar__footer-text--muted {
+  color: var(--text-tertiary);
+  opacity: 0.7;
+}
+
+@media (max-width: 900px) {
+  .aegis-sidebar {
+    display: none;
+  }
+}

@@ -1,0 +1,236 @@
+/* Organisations management page.
+ *
+ * Mirrors UsersPage.css exactly so the admin area has a consistent
+ * rhythm: hero panel + error banner + table panel + modal. Reusing
+ * the prefix ``aegis-orgs__`` (instead of aliasing aegis-users) so
+ * each page can evolve styling independently without affecting the
+ * other.
+ */
+
+.aegis-orgs {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-7);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Hero panel + new-button strip at the top of the page. */
+.aegis-orgs__hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.aegis-orgs__title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 var(--space-2) 0;
+  letter-spacing: -0.01em;
+}
+
+.aegis-orgs__subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  max-width: 720px;
+  line-height: 1.5;
+}
+
+/* Inline error / info banner with dismiss button. */
+.aegis-orgs__banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+  border: 1px solid;
+  font-size: 13px;
+}
+
+.aegis-orgs__banner--error {
+  background: var(--bg-error, rgba(220, 60, 60, 0.08));
+  border-color: var(--border-error, rgba(220, 60, 60, 0.3));
+  color: var(--text-error, #b33030);
+}
+
+.aegis-orgs__banner-dismiss {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
+}
+
+.aegis-orgs__banner-dismiss:hover {
+  opacity: 1;
+}
+
+/* Table panel background. */
+.aegis-orgs__panel {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.aegis-orgs__state {
+  padding: var(--space-7);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.aegis-orgs__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.aegis-orgs__table thead th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-table-header, var(--bg-subtle));
+  color: var(--text-tertiary);
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.aegis-orgs__table tbody tr {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 0.15s ease;
+}
+
+.aegis-orgs__table tbody tr:last-child {
+  border-bottom: 0;
+}
+
+.aegis-orgs__table tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+.aegis-orgs__table tbody tr[aria-busy="true"] {
+  opacity: 0.6;
+}
+
+.aegis-orgs__table td {
+  padding: var(--space-3) var(--space-4);
+  vertical-align: middle;
+  color: var(--text-primary);
+}
+
+.aegis-orgs__table-actions-col {
+  text-align: right;
+  width: 1%;
+}
+
+.aegis-orgs__cell-name {
+  min-width: 220px;
+}
+
+.aegis-orgs__cell-name-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.aegis-orgs__cell-orgname {
+  font-weight: 500;
+}
+
+.aegis-orgs__you-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--bg-chip, rgba(60, 130, 220, 0.12));
+  color: var(--text-accent, #4892e0);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.aegis-orgs__cell-id {
+  display: block;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono, ui-monospace, "SF Mono", Menlo, monospace);
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.aegis-orgs__slug-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  font-family: var(--font-mono, ui-monospace, "SF Mono", Menlo, monospace);
+  font-size: 12px;
+  border: 1px solid var(--border-subtle);
+}
+
+/* Modal scrim + centred panel. */
+.aegis-orgs__modal-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 12, 24, 0.55);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.aegis-orgs__modal {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg, var(--radius-md));
+  width: 480px;
+  max-width: calc(100vw - 32px);
+  padding: var(--space-6);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.aegis-orgs__modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.aegis-orgs__modal-sub {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.aegis-orgs__modal-fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.aegis-orgs__modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
