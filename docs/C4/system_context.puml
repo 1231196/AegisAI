@@ -1,0 +1,21 @@
+@startuml C1
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(user, "User")
+Person(admin, "Administrator")
+
+System(system, "Aegis AI Platform", "Enterprise AI Assistant")
+
+System_Ext(llm, "LLM Providers", "OpenAI / Azure / Ollama")
+System_Ext(identity, "Identity Provider")
+System_Ext(company, "Company Systems")
+
+Rel(user, system, "Uses")
+Rel(admin, system, "Administrates")
+
+Rel(system, llm, "Generates responses")
+Rel(system, company, "Reads data through MCP")
+Rel(system, identity, "Authenticates")
+
+SHOW_LEGEND()
+@endumls

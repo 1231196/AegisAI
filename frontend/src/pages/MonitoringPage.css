@@ -1,0 +1,65 @@
+.aegis-monitoring {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.aegis-monitoring__stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+@media (max-width: 900px) {
+  .aegis-monitoring__stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .aegis-monitoring__stat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.aegis-monitoring__stat-card svg.aegis-sparkline {
+  margin-top: var(--space-2);
+  width: 100%;
+  height: 32px;
+}
+
+.aegis-monitoring__service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+@media (max-width: 700px) {
+  .aegis-monitoring__service-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.aegis-monitoring__service-card {
+  background: var(--bg-card-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.aegis-monitoring__service-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.aegis-monitoring__service-name {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.aegis-monitoring__service-card .aegis-sparkline {
+  width: 100%;
+  height: 44px;
+}

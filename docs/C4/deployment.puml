@@ -1,0 +1,45 @@
+@startuml
+
+node "Docker Host" {
+
+node "Frontend Container" {
+component React
+}
+
+node "API Container" {
+component FastAPI
+}
+    
+node "AI Container" {
+component AI
+}
+
+node "MCP Container" {
+component MCP
+}
+
+database PostgreSQL
+
+database Redis
+
+database Qdrant
+
+}
+
+cloud OpenAI
+
+React --> FastAPI
+
+FastAPI --> PostgreSQL
+
+FastAPI --> Redis
+
+FastAPI --> AI
+
+AI --> Qdrant
+
+AI --> MCP
+
+AI --> OpenAI
+
+@enduml

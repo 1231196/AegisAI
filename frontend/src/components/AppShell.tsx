@@ -33,6 +33,7 @@ export function AppShell({
         grantedPermissions={grantedPermissions}
         activeId={activeId}
         onNavigate={onNavigate}
+        accountName={user?.username}
       />
       <div className="aegis-app-shell__layout">
         {topbar && <header className="aegis-app-shell__topbar">{topbar}</header>}

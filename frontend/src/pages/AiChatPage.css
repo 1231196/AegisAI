@@ -1,0 +1,499 @@
+.aegis-chat {
+  display: flex;
+  gap: var(--space-4);
+  flex: 1;
+  min-height: 0;
+}
+
+/* --- left rail: conversation list --- */
+
+.aegis-chat__rail {
+  width: 260px;
+  flex-shrink: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 0;
+}
+.aegis-chat__new-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, var(--brand-yellow) 0%, var(--brand-yellow-strong) 100%);
+  color: var(--brand-on-yellow);
+  font-weight: 600;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.aegis-chat__new-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.aegis-chat__new-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.aegis-chat__conv-list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.aegis-chat__conv-group-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+  padding: 0 8px;
+}
+.aegis-chat__conv-item-row {
+  display: flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+.aegis-chat__conv-item-row:hover {
+  background: var(--bg-hover);
+}
+.aegis-chat__conv-item {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  padding: 8px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+}
+.aegis-chat__conv-item-row:hover .aegis-chat__conv-item {
+  color: var(--text-primary);
+}
+.aegis-chat__conv-item--active {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.aegis-chat__conv-delete {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  margin-right: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-tertiary);
+  opacity: 0;
+  transition: opacity var(--transition-fast), color var(--transition-fast),
+    background var(--transition-fast);
+}
+.aegis-chat__conv-item-row:hover .aegis-chat__conv-delete {
+  opacity: 1;
+}
+.aegis-chat__conv-delete:hover {
+  color: var(--color-error);
+  background: var(--color-error-bg);
+}
+.aegis-chat__conv-delete svg {
+  width: 11px;
+  height: 11px;
+}
+
+/* --- center: thread --- */
+
+.aegis-chat__thread {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.aegis-chat__thread-header {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+.aegis-chat__thread-header h1 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.aegis-chat__messages {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.aegis-chat__empty-state {
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 13px;
+  padding: var(--space-8);
+}
+.aegis-chat__empty-state--compact {
+  padding: var(--space-4);
+}
+
+.aegis-chat__msg {
+  display: flex;
+  gap: var(--space-3);
+  max-width: 640px;
+}
+.aegis-chat__msg--user {
+  flex-direction: row-reverse;
+  margin-left: auto;
+}
+.aegis-chat__msg-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--bg-card-elevated);
+  color: var(--text-secondary);
+}
+.aegis-chat__msg--assistant .aegis-chat__msg-avatar {
+  background: linear-gradient(180deg, var(--brand-yellow) 0%, var(--brand-yellow-strong) 100%);
+  color: var(--brand-on-yellow);
+}
+.aegis-chat__msg-body {
+  background: var(--bg-card-elevated);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: 13px;
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-width: 0;
+}
+.aegis-chat__msg--user .aegis-chat__msg-body {
+  background: var(--brand-yellow-soft);
+}
+.aegis-chat__msg-body p {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+/* Markdown rendering for assistant messages (react-markdown output). */
+.aegis-chat__markdown {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+.aegis-chat__markdown > *:first-child {
+  margin-top: 0;
+}
+.aegis-chat__markdown > *:last-child {
+  margin-bottom: 0;
+}
+.aegis-chat__markdown p {
+  margin: 0 0 var(--space-2);
+  white-space: normal;
+}
+.aegis-chat__markdown ul,
+.aegis-chat__markdown ol {
+  margin: 0 0 var(--space-2);
+  padding-left: 20px;
+}
+.aegis-chat__markdown li {
+  margin-bottom: 2px;
+}
+.aegis-chat__markdown li > p {
+  margin: 0;
+}
+.aegis-chat__markdown strong {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.aegis-chat__markdown a {
+  color: var(--brand-yellow);
+  text-decoration: underline;
+}
+.aegis-chat__markdown h1,
+.aegis-chat__markdown h2,
+.aegis-chat__markdown h3,
+.aegis-chat__markdown h4 {
+  margin: var(--space-3) 0 var(--space-2);
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+.aegis-chat__markdown h1 {
+  font-size: 16px;
+}
+.aegis-chat__markdown h2 {
+  font-size: 15px;
+}
+.aegis-chat__markdown h3,
+.aegis-chat__markdown h4 {
+  font-size: 13px;
+}
+.aegis-chat__markdown code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: var(--bg-app);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+.aegis-chat__markdown pre {
+  background: var(--bg-app);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-3);
+  overflow-x: auto;
+  margin: 0 0 var(--space-2);
+}
+.aegis-chat__markdown pre code {
+  background: none;
+  border: none;
+  padding: 0;
+}
+.aegis-chat__markdown table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 0 var(--space-2);
+  font-size: 12px;
+}
+.aegis-chat__markdown th,
+.aegis-chat__markdown td {
+  border: 1px solid var(--border-subtle);
+  padding: 4px 8px;
+  text-align: left;
+}
+.aegis-chat__markdown th {
+  background: var(--bg-app);
+  font-weight: 600;
+}
+.aegis-chat__markdown blockquote {
+  margin: 0 0 var(--space-2);
+  padding-left: var(--space-3);
+  border-left: 2px solid var(--border-default);
+  color: var(--text-secondary);
+}
+.aegis-chat__markdown hr {
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+  margin: var(--space-3) 0;
+}
+
+.aegis-chat__typing {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+.aegis-chat__typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  animation: aegis-chat-typing 1.1s ease-in-out infinite;
+}
+.aegis-chat__typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.aegis-chat__typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes aegis-chat-typing {
+  0%,
+  60%,
+  100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+.aegis-chat__status-row {
+  height: 18px;
+  padding: 0 var(--space-5);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.aegis-chat__input-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-2) var(--space-5) 0;
+  padding: 6px 6px 6px 14px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-pill);
+  background: var(--bg-input);
+  flex-shrink: 0;
+  transition: border-color var(--transition-base);
+}
+.aegis-chat__input-bar:focus-within {
+  border-color: var(--brand-yellow);
+  box-shadow: 0 0 0 3px var(--brand-yellow-soft);
+}
+.aegis-chat__input-bar input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.aegis-chat__input-bar input::placeholder {
+  color: var(--text-tertiary);
+}
+.aegis-chat__input-bar input:disabled {
+  opacity: 0.6;
+}
+.aegis-chat__send-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, var(--brand-yellow) 0%, var(--brand-yellow-strong) 100%);
+  color: var(--brand-on-yellow);
+  flex-shrink: 0;
+}
+.aegis-chat__send-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.aegis-chat__send-btn svg {
+  width: 14px;
+  height: 14px;
+  margin-left: 1px;
+}
+
+.aegis-chat__disclaimer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  padding: var(--space-3) var(--space-5) var(--space-4);
+  flex-shrink: 0;
+}
+
+/* --- right: sources panel --- */
+
+.aegis-chat__details {
+  width: 300px;
+  flex-shrink: 0;
+  min-height: 0;
+  overflow-y: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.aegis-chat__details-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.aegis-chat__details-header h2 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.aegis-chat__details-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.aegis-chat__source-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.aegis-chat__source-card {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.aegis-chat__source-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.aegis-chat__source-card-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.aegis-chat__source-card-meta {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+.aegis-chat__source-card-excerpt {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+.aegis-chat__source-card-excerpt mark {
+  background: var(--brand-yellow-soft);
+  color: var(--brand-yellow);
+  border-radius: 3px;
+  padding: 0 2px;
+}
+
+@media (max-width: 1200px) {
+  .aegis-chat__details {
+    display: none;
+  }
+}
+@media (max-width: 900px) {
+  .aegis-chat__rail {
+    display: none;
+  }
+}

@@ -1,0 +1,31 @@
+@startuml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+ß
+Container_Boundary(api, "API Backend") {
+
+Component(auth, "Authentication")
+
+Component(users, "Users")
+
+Component(orgs, "Organizations")
+
+Component(docs, "Documents")
+
+Component(chat, "Chat")
+
+Component(admin, "Administration")
+
+Component(events, "Audit Logs")
+
+}
+
+Rel(auth, users, "Authorizes")
+
+Rel(chat, docs, "Reads documents")
+
+Rel(admin, users, "Manages")
+
+Rel(events, admin, "Logs")
+
+@enduml

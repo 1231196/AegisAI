@@ -28,16 +28,15 @@ from __future__ import annotations
 
 import logging
 import uuid
-from contextlib import contextmanager
 from datetime import datetime, timezone
 from threading import RLock
-from typing import Iterator, Optional
+from typing import Optional
 
 from sqlalchemy import delete as sql_delete, select
 from sqlalchemy.exc import IntegrityError
 
 from app.db.models import Organization, User
-from app.db.session import SessionLocal
+from app.db.session import session_scope as _session
 from app.exceptions import ConflictError
 
 logger = logging.getLogger(__name__)
@@ -45,47 +44,6 @@ logger = logging.getLogger(__name__)
 
 def _now() -> datetime:
     return datetime.now(tz=timezone.utc)
-
-
-@contextmanager
-def _session() -> Iterator:
-    """Yield a transactional session; commit on success, rollback on error.
-
-    Any exception (SQLAlchemy, network, programmer error) invalidates
-    the transaction and triggers a rollback so the next checkout from
-    the connection pool starts clean. ``BaseException`` subclasses like
-    ``KeyboardInterrupt`` skip the rollback — Postgres aborts the tx
-    server-side in that case, and rolling back an aborted-because-killed
-    session can itself raise.
-
-    The inner rollback is wrapped so that a *secondary* failure during
-    rollback (e.g. a connection that's already been closed by the server
-    or an ``InvalidRequestError`` on an already-rolled-back session) does
-    not replace the original exception in ``__context__``. The original
-    error remains visible to the caller; the swallowed secondary
-    failure is logged at WARNING so an operator can correlate both
-    events from a single log stream.
-    """
-    session = SessionLocal()
-    try:
-        yield session
-        session.commit()
-    except Exception as primary:
-        try:
-            session.rollback()
-        except Exception as secondary:
-            logger.warning(
-                "secondary failure during SQL rollback after primary error; "
-                "swallowing so the original error surfaces: primary=%r secondary=%r",
-                primary,
-                secondary,
-            )
-        raise
-    finally:
-        try:
-            session.close()
-        except Exception:
-            logger.warning("secondary failure during session.close()", exc_info=True)
 
 
 def _user_to_dict(record: User) -> dict:

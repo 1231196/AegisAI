@@ -1,0 +1,142 @@
+.aegis-agent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.aegis-agent__layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--space-4);
+  align-items: start;
+}
+@media (max-width: 1000px) {
+  .aegis-agent__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.aegis-agent__task-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--space-4);
+}
+
+.aegis-agent__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.aegis-agent__step {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.aegis-agent__step-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+.aegis-agent__step-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-success-bg);
+  color: var(--color-success);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.aegis-agent__step-dot svg {
+  width: 13px;
+  height: 13px;
+}
+.aegis-agent__step-line {
+  flex: 1;
+  width: 2px;
+  min-height: 20px;
+  background: var(--border-subtle);
+  margin: 2px 0;
+}
+
+.aegis-agent__step-btn {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  padding: 2px var(--space-3) var(--space-5);
+  border-radius: var(--radius-md);
+}
+.aegis-agent__step-btn:hover .aegis-agent__step-title {
+  color: var(--brand-yellow);
+}
+.aegis-agent__step-btn--active .aegis-agent__step-title {
+  color: var(--brand-yellow);
+}
+
+.aegis-agent__step-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: 4px;
+}
+.aegis-agent__step-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color var(--transition-fast);
+}
+.aegis-agent__step-desc {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+.aegis-agent__detail-panel {
+  position: sticky;
+  top: var(--space-4);
+}
+
+.aegis-agent__detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.aegis-agent__detail h3 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  margin: 0 0 var(--space-2);
+}
+.aegis-agent__tool-name {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-app);
+  border: 1px solid var(--border-subtle);
+  color: var(--brand-yellow);
+}
+.aegis-agent__detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-secondary);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.aegis-agent__result-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}

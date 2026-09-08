@@ -310,6 +310,70 @@ export interface PermissionsResponse {
   permissions: string[];
 }
 
+// Knowledge Base (Epic 3). Mirrors backend-api's DocumentOut schema
+// (app/documents/schemas.py) field-for-field.
+export const DOCUMENT_STATUSES = ["processing", "indexed", "failed"] as const;
+export type DocumentStatus = (typeof DOCUMENT_STATUSES)[number];
+
+// Extensions accepted by POST /documents (US-008). Mirrors
+// app/documents/schemas.py's ALLOWED_EXTENSIONS keys.
+export const ALLOWED_DOCUMENT_EXTENSIONS = ["pdf", "docx", "txt", "md", "csv"] as const;
+
+export interface DocumentResponse {
+  id: string;
+  organization_id: string;
+  uploaded_by: string;
+  filename: string;
+  file_type: string;
+  size_bytes: number;
+  status: DocumentStatus;
+  chunk_count: number | null;
+  content_hash: string | null;
+  error_message: string | null;
+  created_at: string;
+  updated_at: string;
+  indexed_at: string | null;
+}
+
+// Chat (Epic 5). Mirrors backend-api's ConversationOut/MessageOut
+// schemas (app/conversations/schemas.py) field-for-field.
+export interface ConversationResponse {
+  id: string;
+  organization_id: string;
+  user_id: string;
+  title: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MessageResponse {
+  id: string;
+  conversation_id: string;
+  role: "user" | "assistant";
+  content: string;
+  sources_json: string | null;
+  created_at: string;
+}
+
+// Mirrors backend-ai's SourceResult (app/retrieval/schemas.py) — this
+// is what's inside a parsed MessageResponse.sources_json.
+export interface ChatSourceResult {
+  document_id: string;
+  filename: string;
+  page_number: number | null;
+  chunk_index: number;
+  text: string;
+  excerpt: string;
+  score: number;
+  rerank_score: number;
+}
+
+export type ChatStreamEvent =
+  | { event: "sources"; data: { results: ChatSourceResult[] } }
+  | { event: "token"; data: { text: string } }
+  | { event: "done"; data: Record<string, never> }
+  | { event: "error"; data: { message: string } };
+
 export class ApiError extends Error {
   status: number;
   detail: string;
@@ -341,10 +405,16 @@ class ApiClient {
   }
 
   /**
-   * Issue a JSON request. If the server returns 401 and we have a
-   * refresh token, performs a single attempt at rotation + retry.
-   * Refresh-on-401 deliberately disabled for the auth lifecycle endpoints
-   * (login / register / refresh itself) to avoid recursion.
+   * Issue a JSON (or, for a ``FormData`` body, multipart) request. If
+   * the server returns 401 and we have a refresh token, performs a
+   * single attempt at rotation + retry. Refresh-on-401 deliberately
+   * disabled for the auth lifecycle endpoints (login / register /
+   * refresh itself) to avoid recursion.
+   *
+   * ``FormData`` bodies (document upload) are passed through as-is
+   * with no ``Content-Type`` header set — the browser fills in
+   * ``multipart/form-data; boundary=...`` itself, which it can only
+   * do correctly if we don't set the header manually.
    */
   private async request<T>(
     method: string,
@@ -355,10 +425,13 @@ class ApiClient {
       retry: true,
     },
   ): Promise<T> {
+    const isFormData = body instanceof FormData;
     const headers: Record<string, string> = {
-      "Content-Type": "application/json",
       Accept: "application/json",
     };
+    if (!isFormData) {
+      headers["Content-Type"] = "application/json";
+    }
     if (this.accessToken) {
       headers["Authorization"] = `Bearer ${this.accessToken}`;
     }
@@ -366,7 +439,12 @@ class ApiClient {
     const res = await fetch(`${API_BASE}${path}`, {
       method,
       headers,
-      body: body !== undefined ? JSON.stringify(body) : undefined,
+      body:
+        body === undefined
+          ? undefined
+          : body instanceof FormData
+            ? body
+            : JSON.stringify(body),
       credentials: "omit",
     });
 
@@ -524,6 +602,148 @@ class ApiClient {
       "DELETE",
       `/organizations/${encodeURIComponent(id)}`,
     );
+  }
+
+  // --- Knowledge Base documents (Epic 3) ---
+  // Same bearer + refresh-once plumbing as the rest of the client.
+  // Upload returns immediately with status "processing" — the actual
+  // parse/chunk/embed pipeline runs asynchronously in backend-ai, so
+  // callers poll listDocuments()/getDocument() for the terminal state.
+
+  async listDocuments(): Promise<DocumentResponse[]> {
+    return this.request<DocumentResponse[]>("GET", "/documents");
+  }
+
+  async getDocument(id: string): Promise<DocumentResponse> {
+    return this.request<DocumentResponse>("GET", `/documents/${encodeURIComponent(id)}`);
+  }
+
+  async uploadDocument(file: File): Promise<DocumentResponse> {
+    const form = new FormData();
+    form.append("file", file);
+    return this.request<DocumentResponse>("POST", "/documents", form);
+  }
+
+  async reindexDocument(id: string): Promise<DocumentResponse> {
+    return this.request<DocumentResponse>(
+      "POST",
+      `/documents/${encodeURIComponent(id)}/reindex`,
+    );
+  }
+
+  async deleteDocument(id: string): Promise<void> {
+    return this.request<void>("DELETE", `/documents/${encodeURIComponent(id)}`);
+  }
+
+  // --- Chat (Epic 5) ---
+  // Same bearer + refresh-once plumbing as the rest of the client for
+  // the plain CRUD calls. sendMessage() is different — see below.
+
+  async listConversations(): Promise<ConversationResponse[]> {
+    return this.request<ConversationResponse[]>("GET", "/conversations");
+  }
+
+  async createConversation(): Promise<ConversationResponse> {
+    return this.request<ConversationResponse>("POST", "/conversations");
+  }
+
+  async deleteConversation(id: string): Promise<void> {
+    return this.request<void>("DELETE", `/conversations/${encodeURIComponent(id)}`);
+  }
+
+  async listMessages(conversationId: string): Promise<MessageResponse[]> {
+    return this.request<MessageResponse[]>(
+      "GET",
+      `/conversations/${encodeURIComponent(conversationId)}/messages`,
+    );
+  }
+
+  /**
+   * Send a message and stream the assistant's reply as it's
+   * generated (US-021). Doesn't go through ``request()`` — that
+   * method always awaits a full JSON body, but this needs the raw
+   * streaming ``Response.body`` to read Server-Sent Events as they
+   * arrive.
+   *
+   * Parses the SSE framing itself (line-by-line, tracking the
+   * current ``event:`` until the next blank line) rather than
+   * assuming chunk boundaries line up with message boundaries —
+   * same approach backend-api's own SSE consumer
+   * (``app/documents/ai_client.py``) uses for the upstream hop.
+   */
+  async *sendMessage(
+    conversationId: string,
+    content: string,
+  ): AsyncGenerator<ChatStreamEvent> {
+    const path = `/conversations/${encodeURIComponent(conversationId)}/messages`;
+    const doRequest = (): Promise<Response> => {
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
+        Accept: "text/event-stream",
+      };
+      if (this.accessToken) {
+        headers["Authorization"] = `Bearer ${this.accessToken}`;
+      }
+      return fetch(`${API_BASE}${path}`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ content }),
+        credentials: "omit",
+      });
+    };
+
+    let res = await doRequest();
+    if (res.status === 401 && this.refreshToken) {
+      const newAccess = await this.refreshOnce();
+      if (newAccess) {
+        res = await doRequest();
+      }
+    }
+    if (!res.ok) {
+      let detail = res.statusText;
+      try {
+        const j = (await res.json()) as { detail?: string };
+        detail = j.detail ?? JSON.stringify(j);
+      } catch {
+        /* keep statusText */
+      }
+      throw new ApiError(res.status, detail);
+    }
+    if (!res.body) {
+      throw new ApiError(0, "Streaming response had no body");
+    }
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = "";
+    let currentEvent: string | null = null;
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+
+      let newlineIndex: number;
+      while ((newlineIndex = buffer.indexOf("\n")) >= 0) {
+        const line = buffer.slice(0, newlineIndex).replace(/\r$/, "");
+        buffer = buffer.slice(newlineIndex + 1);
+
+        if (line === "") {
+          currentEvent = null;
+          continue;
+        }
+        if (line.startsWith("event:")) {
+          currentEvent = line.slice(6).trim();
+        } else if (line.startsWith("data:") && currentEvent) {
+          const raw = line.slice(5).trim();
+          try {
+            yield { event: currentEvent, data: JSON.parse(raw) } as ChatStreamEvent;
+          } catch {
+            /* malformed frame — skip rather than crash the stream */
+          }
+        }
+      }
+    }
   }
 
   async logout(): Promise<void> {

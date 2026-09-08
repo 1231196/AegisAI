@@ -20,6 +20,30 @@ qdrant-client
 
 # Embeddings
 sentence-transformers
+einops          # required by jina-embeddings-v3's custom modeling code
+fastembed        # sparse (BM25) embeddings for hybrid search (Epic 4 / US-016)
+# jina-embeddings-v3's remote code (trust_remote_code=True) calls into
+# transformers internals that a current transformers release renamed/
+# removed (`PreTrainedModel.all_tied_weights_keys`), which crashes
+# model loading with an AttributeError. 4.41.2 is the last version
+# verified to load the model successfully; leave unpinned only after
+# confirming a newer transformers works with this exact model.
+transformers==4.41.2
+
+# Document parsing (US-009)
+pymupdf          # PDF text extraction + page rasterisation for OCR fallback
+python-docx       # DOCX text extraction
+
+# OCR fallback for scanned/image PDF pages (US-009).
+# Pinned: paddlepaddle 3.x's newer PIR inference backend segfaults
+# (SIGSEGV, crashing the whole process) on aarch64 during Predictor
+# construction for *any* model — reproduced with both PaddleOCR 3.x's
+# default pipeline and a stripped-down one. 2.6.2/2.9.1 (predating the
+# PIR rewrite) verified working end-to-end, including OCR accuracy,
+# on the same aarch64 host. Confirm on the actual deployment
+# architecture before upgrading past these pins.
+paddlepaddle==2.6.2
+paddleocr==2.9.1
 
 # Redis
 redis
@@ -27,6 +51,8 @@ redis
 # API / Config
 python-dotenv
 pydantic-settings
+httpx
+python-multipart
 
 # Evaluation later
 ragas

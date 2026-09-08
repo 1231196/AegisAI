@@ -1,0 +1,130 @@
+.aegis-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.aegis-topbar__search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 360px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  color: var(--text-tertiary);
+  transition: border-color var(--transition-base);
+}
+.aegis-topbar__search:focus-within {
+  border-color: var(--brand-yellow);
+  box-shadow: 0 0 0 3px var(--brand-yellow-soft);
+}
+.aegis-topbar__search-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+.aegis-topbar__search input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+.aegis-topbar__search input::placeholder {
+  color: var(--text-tertiary);
+}
+.aegis-topbar__kbd {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  padding: 1px 5px;
+  flex-shrink: 0;
+}
+
+.aegis-topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.aegis-topbar__icon-btn {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.aegis-topbar__icon-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.aegis-topbar__icon-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.aegis-topbar__divider {
+  width: 1px;
+  height: 22px;
+  background: var(--border-subtle);
+  margin: 0 4px;
+}
+
+.aegis-topbar__org {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 8px 0 6px;
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+.aegis-topbar__org:hover {
+  background: var(--bg-hover);
+}
+.aegis-topbar__org-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--brand-yellow), var(--brand-yellow-strong));
+  color: var(--brand-on-yellow);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.aegis-topbar__org-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+.aegis-topbar__org-chevron {
+  width: 14px;
+  height: 14px;
+  color: var(--text-tertiary);
+}
+
+@media (max-width: 700px) {
+  .aegis-topbar__search {
+    max-width: 180px;
+  }
+  .aegis-topbar__org-name {
+    display: none;
+  }
+}

@@ -23,7 +23,19 @@ Schema choices
 
 from __future__ import annotations
 
-from sqlalchemy import Boolean, Column, ForeignKey, Index, String, event
+from sqlalchemy import (
+    BigInteger,
+    Boolean,
+    Column,
+    DateTime,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+    event,
+    func,
+)
 
 from app.db.session import Base, engine
 
@@ -59,6 +71,124 @@ class User(Base):
     __table_args__ = (
         # List-by-org is the hot path for the admin /users GET endpoint.
         Index("ix_users_organization_id", "organization_id"),
+    )
+
+
+class Document(Base):
+    """Knowledge-base document metadata row (Epic 3 / US-008..US-014).
+
+    This table is the source of truth for "what documents exist and
+    what state are they in" — the actual extracted text, chunks, and
+    embeddings never touch Postgres; they live in Qdrant, owned by
+    backend-ai. ``storage_path`` points at the raw uploaded file on
+    the ``documents-data`` volume shared with backend-ai (see
+    docker-compose.yml), so reindexing doesn't require re-uploading.
+
+    ``status`` lifecycle: ``processing`` -> ``indexed`` | ``failed``.
+    backend-ai reports the terminal state via the internal callback
+    endpoint (``PATCH /internal/documents/{id}/status``), never the
+    user-facing router directly.
+
+    ``content_hash`` (sha256 of the file bytes) is what makes
+    reindexing incremental (US-013): backend-api sends the *previous*
+    hash along with a reindex request, and backend-ai skips
+    re-embedding entirely when the file hasn't changed.
+    """
+
+    __tablename__ = "documents"
+
+    id = Column(String(36), primary_key=True)
+    organization_id = Column(
+        String(36),
+        ForeignKey("organizations.id"),
+        nullable=False,
+    )
+    uploaded_by = Column(String(36), ForeignKey("users.id"), nullable=False)
+    filename = Column(String(255), nullable=False)
+    file_type = Column(String(16), nullable=False)
+    size_bytes = Column(BigInteger, nullable=False)
+    status = Column(String(16), nullable=False, default="processing")
+    chunk_count = Column(Integer, nullable=True)
+    storage_path = Column(String(512), nullable=False)
+    content_hash = Column(String(64), nullable=True)
+    error_message = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    updated_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
+    indexed_at = Column(DateTime(timezone=True), nullable=True)
+
+    __table_args__ = (
+        # List-by-org is the hot path for GET /documents.
+        Index("ix_documents_organization_id", "organization_id"),
+    )
+
+
+class Conversation(Base):
+    """A chat session (Epic 5 / US-023).
+
+    Strictly owned by ``user_id`` — conversations are personal history
+    ("so I can continue my work"), not an org-wide shared resource, so
+    there's no admin-oversight listing in this pass. ``title`` starts
+    NULL and is set from the first user message once one arrives
+    (``app.conversations.router``).
+    """
+
+    __tablename__ = "conversations"
+
+    id = Column(String(36), primary_key=True)
+    organization_id = Column(
+        String(36),
+        ForeignKey("organizations.id"),
+        nullable=False,
+    )
+    user_id = Column(String(36), ForeignKey("users.id"), nullable=False)
+    title = Column(String(120), nullable=True)
+    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+    updated_at = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=func.now(),
+        onupdate=func.now(),
+    )
+
+    __table_args__ = (
+        # List-by-user is the hot path for GET /conversations.
+        Index("ix_conversations_user_id", "user_id"),
+    )
+
+
+class Message(Base):
+    """One turn in a conversation (Epic 5 / US-020, US-022).
+
+    ``sources_json`` is a JSON-encoded list of the retrieval results
+    (Epic 4's ``SourceResult`` shape) the assistant's answer was
+    grounded in — NULL for user messages, populated for assistant
+    messages once the stream finishes. Kept as a plain Text column
+    (not a JSON column type) so SQLite and Postgres behave identically
+    — the API layer is the only thing that ever needs to parse it.
+    """
+
+    __tablename__ = "messages"
+
+    id = Column(String(36), primary_key=True)
+    conversation_id = Column(
+        String(36),
+        ForeignKey("conversations.id"),
+        nullable=False,
+    )
+    role = Column(String(16), nullable=False)
+    content = Column(Text, nullable=False)
+    sources_json = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
+
+    __table_args__ = (
+        # List-by-conversation, ordered by created_at, is the hot path
+        # for GET /conversations/{id}/messages.
+        Index("ix_messages_conversation_id", "conversation_id"),
     )
 
 

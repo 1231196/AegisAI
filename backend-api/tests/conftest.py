@@ -24,6 +24,8 @@ from app.auth.repositories import (  # noqa: E402  (must follow env var set)
     RefreshTokenRepository,
     UserRepository,
 )
+from app.conversations.repositories import ConversationRepository  # noqa: E402
+from app.documents.repositories import DocumentRepository  # noqa: E402
 
 DEMO_ORG_ID = "00000000-0000-0000-0000-000000000001"
 DEMO_USER_ID = "00000000-0000-0000-0000-0000000000aa"
@@ -34,6 +36,11 @@ def _hash(plain: str) -> str:
 
 
 def _seed_canonical_world() -> None:
+    # Conversations/documents reference organizations/users via FK —
+    # clear them first so the org/user clear below doesn't violate
+    # referential integrity on Postgres.
+    ConversationRepository.clear()
+    DocumentRepository.clear()
     UserRepository.clear()
     OrganizationRepository.clear()
     RefreshTokenRepository.clear()

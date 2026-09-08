@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Sidebar } from "./Sidebar";
+import { AuthBrandPanel } from "./AuthBrandPanel";
 import "./AuthShell.css";
 
 interface AuthShellProps {
@@ -9,7 +9,7 @@ interface AuthShellProps {
 export function AuthShell({ children }: AuthShellProps) {
   return (
     <div className="aegis-auth-shell">
-      <Sidebar />
+      <AuthBrandPanel />
       <main className="aegis-auth-shell__main">
         <div className="aegis-auth-shell__panel">
           {children}

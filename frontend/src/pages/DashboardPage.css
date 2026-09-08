@@ -4,120 +4,26 @@
   gap: var(--space-6);
 }
 
-.aegis-dashboard__hero {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-}
-.aegis-dashboard__welcome {
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-}
-.aegis-dashboard__meta {
-  color: var(--text-secondary);
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-.aegis-dashboard__chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 2px 10px;
-  border-radius: var(--radius-pill);
-  background: var(--brand-yellow-soft);
-  color: var(--brand-yellow);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.aegis-dashboard__grid {
+.aegis-dashboard__stat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: var(--space-4);
 }
-
-.aegis-dashboard__card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color var(--transition-base), transform var(--transition-fast);
+@media (max-width: 1200px) {
+  .aegis-dashboard__stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
-.aegis-dashboard__card:hover {
-  border-color: var(--border-default);
-  transform: translateY(-1px);
-}
-.aegis-dashboard__card-label {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.10em;
-  text-transform: uppercase;
-  color: var(--text-tertiary);
-}
-.aegis-dashboard__card-value {
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
-  font-variant-numeric: tabular-nums;
-}
-.aegis-dashboard__card-meta {
-  font-size: 12px;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
-}
-.aegis-dashboard__card-meta-up {
-  color: var(--color-success);
-}
-.aegis-dashboard__card-accent {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 120px;
-  height: 120px;
-  background:
-    radial-gradient(circle at top right, rgba(250, 204, 21, 0.10), transparent 70%);
-  pointer-events: none;
+@media (max-width: 560px) {
+  .aegis-dashboard__stat-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-.aegis-dashboard__card-accent--blue {
-  background:
-    radial-gradient(circle at top right, rgba(99, 145, 255, 0.12), transparent 70%);
-}
-.aegis-dashboard__card-accent--purple {
-  background:
-    radial-gradient(circle at top right, rgba(165, 132, 255, 0.12), transparent 70%);
-}
-.aegis-dashboard__card-accent--green {
-  background:
-    radial-gradient(circle at top right, rgba(52, 211, 153, 0.12), transparent 70%);
-}
-
-.aegis-dashboard__panel {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: var(--space-6);
-}
-.aegis-dashboard__panel-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: var(--space-3);
+.aegis-dashboard__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .aegis-dashboard__row {
@@ -137,30 +43,61 @@
   background: var(--brand-yellow);
   flex-shrink: 0;
 }
-.aegis-dashboard__row-dot--blue {
-  background: #6391ff;
-}
-.aegis-dashboard__row-dot--purple {
-  background: #a584ff;
-}
 .aegis-dashboard__row-text {
   flex: 1;
+  min-width: 0;
   color: var(--text-primary);
   font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .aegis-dashboard__row-meta {
   color: var(--text-tertiary);
   font-size: 12px;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
-.aegis-dashboard__empty {
-  text-align: center;
-  color: var(--text-tertiary);
-  font-size: 13px;
-  padding: var(--space-6);
+
+.aegis-dashboard__health-meta {
+  font-size: 12px;
+  color: var(--color-success);
+  font-weight: 500;
+}
+
+.aegis-dashboard__model-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.aegis-dashboard__model-row:last-child {
+  border-bottom: none;
+}
+.aegis-dashboard__model-row .aegis-dashboard__row-text {
+  flex: 0 0 140px;
+}
+.aegis-dashboard__model-bar {
+  flex: 1;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-hover);
+  overflow: hidden;
+}
+.aegis-dashboard__model-bar-fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--brand-yellow), var(--brand-yellow-strong));
 }
 
 .aegis-dashboard__signout-row {
   display: flex;
-  gap: 12px;
+  align-items: center;
   justify-content: flex-end;
+  gap: var(--space-4);
+}
+.aegis-dashboard__account-meta {
+  font-size: 12px;
+  color: var(--text-tertiary);
 }

@@ -1,0 +1,241 @@
+/* Shared primitives (panels, badges, tables, tabs, code blocks) reused
+ * across the mock-data pages (AI Chat, Knowledge Base, AI Agent, MCP
+ * Tools, Analytics, Evaluation, Monitoring) and the Dashboard. Kept
+ * separate from tokens.css (raw variables) and component-scoped CSS
+ * (single-component concerns) — this file is for cross-page atoms.
+ */
+
+.aegis-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+}
+.aegis-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.aegis-panel__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.aegis-panel__link {
+  font-size: 12px;
+  color: var(--brand-yellow);
+  font-weight: 600;
+}
+.aegis-panel__link:hover {
+  text-decoration: underline;
+}
+
+.aegis-panel-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+@media (max-width: 1100px) {
+  .aegis-panel-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- badges & status dots ---------------------------------------- */
+
+.aegis-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.aegis-badge--success {
+  background: var(--color-success-bg);
+  color: var(--color-success);
+}
+.aegis-badge--error {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+}
+.aegis-badge--neutral {
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+}
+.aegis-badge--warning {
+  background: var(--brand-yellow-soft);
+  color: var(--brand-yellow);
+}
+
+.aegis-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: inline-block;
+}
+.aegis-dot--success {
+  background: var(--color-success);
+  box-shadow: 0 0 6px rgba(52, 211, 153, 0.5);
+}
+.aegis-dot--error {
+  background: var(--color-error);
+}
+.aegis-dot--warning {
+  background: var(--brand-yellow);
+}
+
+/* --- tables --------------------------------------------------------- */
+
+.aegis-table-wrap {
+  overflow-x: auto;
+}
+.aegis-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.aegis-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-tertiary);
+  padding: 0 var(--space-3) var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+  white-space: nowrap;
+}
+.aegis-table td {
+  padding: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  vertical-align: middle;
+  white-space: nowrap;
+}
+.aegis-table tbody tr:last-child td {
+  border-bottom: none;
+}
+.aegis-table tbody tr {
+  transition: background var(--transition-fast);
+}
+.aegis-table tbody tr[data-clickable="true"] {
+  cursor: pointer;
+}
+.aegis-table tbody tr[data-clickable="true"]:hover {
+  background: var(--bg-hover);
+}
+
+.aegis-ext-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: var(--bg-card-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+/* --- tabs ------------------------------------------------------------ */
+
+.aegis-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.aegis-tabs__tab {
+  padding: 9px 4px;
+  margin-right: var(--space-5);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  border-bottom: 2px solid transparent;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+.aegis-tabs__tab:hover {
+  color: var(--text-primary);
+}
+.aegis-tabs__tab--active {
+  color: var(--text-primary);
+  border-bottom-color: var(--brand-yellow);
+}
+
+/* --- misc ------------------------------------------------------------- */
+
+.aegis-code {
+  background: var(--bg-app);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: pre;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+
+.aegis-select {
+  height: 38px;
+  padding: 0 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-input);
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+}
+.aegis-select:focus-visible {
+  outline: none;
+  border-color: var(--brand-yellow);
+  box-shadow: 0 0 0 3px var(--brand-yellow-soft);
+}
+
+/* --- dismissible inline banner ---------------------------------------- */
+
+.aegis-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+}
+.aegis-banner--error {
+  background: var(--color-error-bg);
+  border: 1px solid rgba(248, 113, 113, 0.25);
+  color: var(--color-error);
+}
+.aegis-banner-dismiss {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 0 4px;
+  opacity: 0.7;
+}
+.aegis-banner-dismiss:hover {
+  opacity: 1;
+}
+
+.aegis-empty-state {
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 13px;
+  padding: var(--space-8);
+}

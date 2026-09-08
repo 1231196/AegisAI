@@ -45,10 +45,14 @@ services:
       - "8000:8000"
     volumes:
       - ./backend-api:/app
+      - documents-data:/data/documents
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/aegisai
       - REDIS_URL=redis://redis:6379
+      - AI_BACKEND_URL=http://backend-ai:8001
+      - INTERNAL_SERVICE_TOKEN=dev-only-internal-token-change-me
+      - DOCUMENTS_STORAGE_PATH=/data/documents
     depends_on:
       - postgres
       - redis
@@ -75,11 +79,20 @@ services:
       - "8001:8001"
     volumes:
       - ./backend-ai:/app
+      - documents-data:/data/documents
+      - hf-cache:/root/.cache/huggingface
+      - paddleocr-cache:/root/.paddleocr
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
       - REDIS_URL=redis://redis:6379
+      - BACKEND_API_URL=http://backend-api:8000
+      - INTERNAL_SERVICE_TOKEN=dev-only-internal-token-change-me
+      # Epic 5 chat: Google Gemini. Compose auto-loads a root .env
+      # (next to this file) for ${...} substitution — set
+      # GOOGLE_API_KEY there, never commit it.
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
     depends_on:
       - qdrant
       - redis
@@ -156,6 +169,9 @@ volumes:
   postgres-data:
   redis-data:
   qdrant-data:
+  documents-data:
+  hf-cache:
+  paddleocr-cache:
 
 
 

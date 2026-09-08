@@ -1,3 +1,6 @@
+# Local document storage (Epic 3 uploads written outside docker)
+backend-api/data/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

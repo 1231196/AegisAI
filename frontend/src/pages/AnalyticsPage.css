@@ -1,0 +1,55 @@
+.aegis-analytics {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.aegis-analytics__stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+@media (max-width: 900px) {
+  .aegis-analytics__stat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 480px) {
+  .aegis-analytics__stat-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.aegis-analytics__chart {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.aegis-analytics__y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: 24px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.aegis-analytics__chart-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.aegis-analytics__sparkline {
+  width: 100%;
+  height: 220px;
+  display: block;
+}
+
+.aegis-analytics__x-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-2);
+  font-size: 11px;
+  color: var(--text-tertiary);
+}

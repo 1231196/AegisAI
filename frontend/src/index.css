@@ -3,6 +3,7 @@
  */
 
 @import "./styles/tokens.css";
+@import "./styles/shared.css";
 
 *,
 *::before,

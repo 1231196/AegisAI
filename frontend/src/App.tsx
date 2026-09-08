@@ -2,6 +2,7 @@ import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { AppShell } from "./components/AppShell";
 import { AuthShell } from "./components/AuthShell";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { Topbar } from "./components/Topbar";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { VerifyEmailPage } from "./pages/VerifyEmailPage";
@@ -9,9 +10,30 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { CustomerPortalPage } from "./pages/CustomerPortalPage";
 import { UsersPage } from "./pages/UsersPage";
 import { OrganizationsPage } from "./pages/OrganizationsPage";
+import { AiChatPage } from "./pages/AiChatPage";
+import { KnowledgeBasePage } from "./pages/KnowledgeBasePage";
+import { AiAgentPage } from "./pages/AiAgentPage";
+import { McpToolsPage } from "./pages/McpToolsPage";
+import { AnalyticsPage } from "./pages/AnalyticsPage";
+import { EvaluationPage } from "./pages/EvaluationPage";
+import { MonitoringPage } from "./pages/MonitoringPage";
 import { hasPermission, isCustomer } from "./api/client";
 import type { Screen } from "./contexts/AuthContext";
 import "./App.css";
+
+// Staff-only screens backed by mock data (no backend yet). Kept as a
+// Set so the routing switch below has a single source of truth for
+// "is this one of the new static pages" instead of repeating the
+// literal list in both the activeId and page-selection branches.
+const MOCK_STAFF_SCREENS = new Set<Screen>([
+  "aiChat",
+  "knowledgeBase",
+  "aiAgent",
+  "mcpTools",
+  "analytics",
+  "evaluation",
+  "monitoring",
+]);
 
 function AppInner() {
   const auth = useAuth();
@@ -55,10 +77,17 @@ function AppInner() {
     const allowCustomers =
       auth.screen === "chat" && callerIsCustomer;
 
+    // Static/mock screens (AI Chat, Knowledge Base, etc.) are staff-only
+    // and have no permission gate of their own — any non-customer lands
+    // on whichever one is in auth.screen.
+    const allowMockScreen =
+      !callerIsCustomer && MOCK_STAFF_SCREENS.has(auth.screen);
+
     // Active sidebar item id:
     //   - customer chat page        → "chat"
     //   - users page (admin-scope)  → "users"
     //   - orgs  page (cross-tenant) → "organizations"
+    //   - mock staff screen         → that screen's id
     //   - default               → "dashboard"
     //   - any gated-out screen    → caller role's landing
     let activeId: string;
@@ -68,6 +97,8 @@ function AppInner() {
       activeId = "organizations";
     } else if (allowUsers) {
       activeId = "users";
+    } else if (allowMockScreen) {
+      activeId = auth.screen;
     } else {
       activeId = callerIsCustomer ? "chat" : "dashboard";
     }
@@ -75,7 +106,7 @@ function AppInner() {
     // Cast the Sidebar/AppShell's `(id: string) => void` callback
     // to AuthContext's stricter ``Screen``-typed ``goToScreen``.
     // Sidebar's full NavItem set includes placeholder ids (e.g.
-    // ``"briefs"``) that don't correspond to a real screen, but
+    // ``"settings"``) that don't correspond to a real screen, but
     // those items have a no-op click handler so this closure is
     // only ever invoked with a real screen id.
     const shellProps = {
@@ -83,6 +114,7 @@ function AppInner() {
       grantedPermissions: auth.permissions,
       activeId,
       onNavigate: (id: string) => auth.goToScreen(id as Screen),
+      topbar: <Topbar user={auth.user} />,
     };
 
     // Page selection mirrors the sidebar-active id, but with a
@@ -111,6 +143,25 @@ function AppInner() {
           onRevoked={() => auth.goToScreen("dashboard")}
         />
       );
+    } else if (allowMockScreen && auth.screen === "aiChat") {
+      page = <AiChatPage user={auth.user!} />;
+    } else if (allowMockScreen && auth.screen === "knowledgeBase") {
+      page = (
+        <KnowledgeBasePage
+          user={auth.user!}
+          grantedPermissions={auth.permissions}
+        />
+      );
+    } else if (allowMockScreen && auth.screen === "aiAgent") {
+      page = <AiAgentPage />;
+    } else if (allowMockScreen && auth.screen === "mcpTools") {
+      page = <McpToolsPage />;
+    } else if (allowMockScreen && auth.screen === "analytics") {
+      page = <AnalyticsPage />;
+    } else if (allowMockScreen && auth.screen === "evaluation") {
+      page = <EvaluationPage />;
+    } else if (allowMockScreen && auth.screen === "monitoring") {
+      page = <MonitoringPage />;
     } else if (callerIsCustomer) {
       // Customer reached dashboard/organizations/users via stale
       // state — bounce to chat portal.

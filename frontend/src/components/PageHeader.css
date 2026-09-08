@@ -1,0 +1,44 @@
+.aegis-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.aegis-page-header__text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.aegis-page-header__title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.aegis-page-header__subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.aegis-page-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.aegis-page-header__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+}

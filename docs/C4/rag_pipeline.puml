@@ -1,0 +1,41 @@
+@startuml
+
+actor User
+
+participant "Chat API" as API
+
+participant Planner
+
+participant Retriever
+
+database Qdrant
+
+participant Reranker
+
+participant PromptBuilder
+
+participant LLM
+
+User -> API : Ask Question
+
+API -> Planner
+
+Planner -> Retriever
+
+Retriever -> Qdrant
+
+Qdrant --> Retriever
+
+Retriever -> Reranker
+
+Reranker --> Planner
+
+Planner -> PromptBuilder
+
+PromptBuilder -> LLM
+
+LLM --> API
+
+API --> User
+
+@enduml

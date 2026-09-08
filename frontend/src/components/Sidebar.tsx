@@ -45,12 +45,13 @@ interface NavItem {
  */
 const NAV_ITEMS: NavItem[] = [
   { id: "dashboard", label: "Dashboard", icon: <DashboardIcon /> },
-  { id: "briefs", label: "AI Briefs", icon: <BriefIcon />, badge: "5", placeholder: true },
-  { id: "console", label: "Agent Console", icon: <ConsoleIcon />, badge: "3", placeholder: true },
-  { id: "tickets", label: "Tickets", icon: <TicketIcon />, badge: "12", placeholder: true },
-  { id: "knowledge", label: "Knowledge Base", icon: <KBIcon />, placeholder: true },
-  { id: "analytics", label: "Analytics", icon: <ChartIcon />, placeholder: true },
-  { id: "reports", label: "Reports", icon: <ReportIcon />, placeholder: true },
+  { id: "aiChat", label: "AI Chat", icon: <ChatIcon /> },
+  { id: "knowledgeBase", label: "Knowledge Base", icon: <KBIcon /> },
+  { id: "aiAgent", label: "AI Agent", icon: <ConsoleIcon /> },
+  { id: "mcpTools", label: "MCP Tools", icon: <McpToolsIcon /> },
+  { id: "analytics", label: "Analytics", icon: <ChartIcon /> },
+  { id: "evaluation", label: "Evaluation", icon: <EvaluationIcon /> },
+  { id: "monitoring", label: "Monitoring", icon: <MonitoringIcon /> },
 ];
 
 /**
@@ -102,6 +103,11 @@ interface SidebarProps {
    * ``auth.goToScreen``.
    */
   onNavigate?: (id: string) => void;
+  /** Display name for the sidebar footer account block. Purely
+   *  presentational — omitting it falls back to the plain version/
+   *  copyright footer (e.g. the unauthenticated auth screens, which
+   *  no longer render this component, but kept as a safe default). */
+  accountName?: string;
 }
 
 export function Sidebar({
@@ -109,6 +115,7 @@ export function Sidebar({
   grantedPermissions,
   activeId = "dashboard",
   onNavigate,
+  accountName,
 }: SidebarProps) {
   const callerIsCustomer = isCustomer(role);
   // Admin section: any admin-scope role gets the section to render;
@@ -184,14 +191,28 @@ export function Sidebar({
       </nav>
 
       <div className="aegis-sidebar__footer">
-        <div className="aegis-sidebar__footer-row">
-          <span className="aegis-sidebar__footer-text">v1.0.0</span>
-        </div>
-        <div className="aegis-sidebar__footer-row">
-          <span className="aegis-sidebar__footer-text aegis-sidebar__footer-text--muted">
-            © 2026 Aegis AI
-          </span>
-        </div>
+        {accountName ? (
+          <div className="aegis-sidebar__account">
+            <span className="aegis-sidebar__account-avatar" aria-hidden="true">
+              {accountName.charAt(0).toUpperCase()}
+            </span>
+            <div className="aegis-sidebar__account-text">
+              <span className="aegis-sidebar__account-name">{accountName}</span>
+              <span className="aegis-sidebar__account-role">{role ?? "member"}</span>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="aegis-sidebar__footer-row">
+              <span className="aegis-sidebar__footer-text">v1.0.0</span>
+            </div>
+            <div className="aegis-sidebar__footer-row">
+              <span className="aegis-sidebar__footer-text aegis-sidebar__footer-text--muted">
+                © 2026 Aegis AI
+              </span>
+            </div>
+          </>
+        )}
       </div>
     </aside>
   );
@@ -209,15 +230,6 @@ function DashboardIcon() {
     </svg>
   );
 }
-function BriefIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 5h14v10H3z" />
-      <path d="M7 5V3h6v2" />
-      <path d="M3 9h14" />
-	</svg>
-  );
-}
 function ConsoleIcon() {
   return (
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
@@ -227,11 +239,27 @@ function ConsoleIcon() {
     </svg>
   );
 }
-function TicketIcon() {
+function McpToolsIcon() {
   return (
     <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-      <path d="M3 6.5V4h14v2.5a2 2 0 0 0 0 4V13a2 2 0 0 0 0 4V19H3v-2a2 2 0 0 0 0-4v-2.5a2 2 0 0 0 0-4z" />
-      <path d="M9 4v12" />
+      <path d="M12.4 4.6a2.6 2.6 0 0 1 3.6 3.6l-1 1-3.6-3.6z" />
+      <path d="M11 6l-6.5 6.5a2 2 0 1 0 2.8 2.8L14 8.5" />
+      <path d="M4 16l1.2-1.2" />
+    </svg>
+  );
+}
+function EvaluationIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="9.5" cy="9.5" r="6.5" />
+      <path d="M6.8 9.5l2 2 4-4.4" />
+    </svg>
+  );
+}
+function MonitoringIcon() {
+  return (
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2.5 11h3l1.8-5 3 8.5 1.8-5.5H17.5" />
     </svg>
   );
 }
@@ -271,16 +299,6 @@ function BuildingIcon() {
       <path d="M13 17V8h4v9" />
       <path d="M6 7h2M6 10h2M6 13h2M9 7h2M9 10h2M9 13h2" />
       <path d="M3 17h15" />
-    </svg>
-  );
-}
-function ReportIcon() {
-  return (
-    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5}>
-      <path d="M5 3h7l4 4v10H5z" />
-      <path d="M12 3v4h4" />
-      <path d="M8 11h6" />
-      <path d="M8 14h4" />
     </svg>
   );
 }

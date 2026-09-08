@@ -1,0 +1,51 @@
+@startuml
+
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Container_Boundary(ai, "AI Backend") {
+
+Component(router, "Model Router")
+
+Component(agent, "AI Agent")
+
+Component(planner, "Planner")
+
+Component(retriever, "Retriever")
+
+Component(reranker, "Cross Encoder")
+
+Component(context, "Context Builder")
+
+Component(prompt, "Prompt Builder")
+
+Component(memory, "Conversation Memory")
+
+Component(guardrails, "Guardrails")
+
+Component(tools, "Tool Manager")
+
+Component(llm, "LLM Client")
+
+}
+
+Rel(agent, planner, "")
+
+Rel(planner, retriever, "")
+
+Rel(retriever, reranker, "")
+
+Rel(reranker, context, "")
+
+Rel(context, prompt, "")
+
+Rel(prompt, router, "")
+
+Rel(router, llm, "")
+
+Rel(agent, memory, "")
+
+Rel(agent, guardrails, "")
+
+Rel(agent, tools, "")
+
+@enduml

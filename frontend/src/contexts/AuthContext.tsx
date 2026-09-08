@@ -37,7 +37,14 @@ export type Screen =
   | "chat"
   | "users"
   | "organizations"
-  | "loading";
+  | "loading"
+  | "aiChat"
+  | "knowledgeBase"
+  | "aiAgent"
+  | "mcpTools"
+  | "analytics"
+  | "evaluation"
+  | "monitoring";
 
 interface AuthState {
   user: UserResponse | null;

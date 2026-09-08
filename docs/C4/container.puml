@@ -1,0 +1,59 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "User")
+
+System_Boundary(aegis, "Aegis AI") {
+
+Container(frontend, "Frontend", "ReactJS",
+"User Interface")
+
+Container(api, "Application Backend", "FastAPI",
+"Authentication, Users, Organizations, RBAC, CRUD APIs")
+
+Container(ai, "AI Backend", "FastAPI",
+"RAG Pipeline, AI Agents, Prompt Builder, Model Routing")
+
+Container(mcp, "MCP Server",
+"Model Context Protocol",
+"Enterprise Tools")
+
+ContainerDb(postgres, "PostgreSQL",
+"Users, Organizations, Documents, Chat History")
+
+ContainerDb(redis, "Redis",
+"Sessions & Cache")
+
+ContainerDb(qdrant, "Qdrant",
+"Vector Database")
+
+}
+
+System_Ext(llm, "LLM Provider")
+System_Ext(company, "Enterprise Systems")
+
+Rel(user, frontend, "Uses")
+
+Rel(frontend, api, "REST API")
+
+Rel(frontend, ai, "Chat (REST / Streaming)")
+
+Rel(api, postgres, "CRUD")
+
+Rel(api, redis, "Sessions")
+
+Rel(ai, qdrant, "Semantic Search")
+
+Rel(ai, redis, "Response Cache")
+
+Rel(ai, postgres, "Conversation History")
+
+Rel(ai, llm, "Inference")
+
+Rel(ai, mcp, "Tool Calls")
+
+Rel(mcp, company, "Enterprise APIs")
+
+SHOW_LEGEND()
+
+@enduml

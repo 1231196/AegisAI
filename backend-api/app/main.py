@@ -1,6 +1,7 @@
 import logging
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,9 +11,13 @@ from app.auth.repositories import OrganizationRepository, UserRepository
 from app.auth.router import router as auth_router
 from app.auth.security import hash_password
 from app.config import settings
+from app.conversations.router import router as conversations_router
 from app.db.session import Base, engine
+from app.documents.router import internal_router as documents_internal_router
+from app.documents.router import router as documents_router
 from app.exceptions import ConflictError
 from app.orgs.router import router as orgs_router
+from app.search.router import router as search_router
 from app.users.router import router as users_router
 
 logger = logging.getLogger(__name__)
@@ -58,6 +63,10 @@ async def lifespan(_app: FastAPI):
        so bcrypt isn't run on every boot.
     """
     Base.metadata.create_all(bind=engine)
+
+    # Epic 3: make sure the shared upload directory exists before the
+    # first POST /documents tries to write into it.
+    Path(settings.documents_storage_path).mkdir(parents=True, exist_ok=True)
 
     if OrganizationRepository.get_by_slug("default") is None:
         OrganizationRepository.seed(
@@ -158,3 +167,7 @@ def root():
 app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(orgs_router)
+app.include_router(documents_router)
+app.include_router(documents_internal_router)
+app.include_router(search_router)
+app.include_router(conversations_router)

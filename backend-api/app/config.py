@@ -53,7 +53,33 @@ class Settings(BaseSettings):
     # this False.
     seed_demo_user: bool = False
 
+    # --- Epic 3: Knowledge Base ingestion ---------------------------------
+    # Local path where uploaded files are written. Defaults to a
+    # project-relative directory (mirrors ``database_url``'s local
+    # SQLite default) so tests/local dev don't try to mkdir at the
+    # filesystem root; docker-compose overrides this to the
+    # ``documents-data`` volume mount point shared with backend-ai, so
+    # backend-ai can read the file by path rather than the bytes being
+    # re-uploaded over HTTP.
+    documents_storage_path: str = "./data/documents"
+    # 25MB — generous for the PDF/DOCX/TXT/MD/CSV formats US-008 covers
+    # without letting a single upload exhaust disk or block the event
+    # loop for too long while buffering into memory.
+    max_upload_size_bytes: int = 25 * 1024 * 1024
+    ai_backend_url: str = "http://backend-ai:8001"
+    # Shared secret for the backend-api <-> backend-ai service-to-service
+    # calls (see app.documents.internal_auth). Never a user JWT.
+    internal_service_token: str = "dev-only-internal-token-change-me"
+
+    # --- Epic 5: Chat -------------------------------------------------
+    # How many of a conversation's most recent messages to send to the
+    # LLM as context for a new reply. Mirrors backend-ai's identically-
+    # named setting conceptually — kept here too since backend-api is
+    # the one that fetches history from Postgres and hands it over.
+    chat_history_max_messages: int = 10
+
     _DEFAULT_SECRET = "dev-only-secret-change-me-in-production"
+    _DEFAULT_INTERNAL_TOKEN = "dev-only-internal-token-change-me"
 
     @model_validator(mode="after")
     def _refuse_unsafe_defaults_in_production(self) -> Settings:
@@ -63,6 +89,12 @@ class Settings(BaseSettings):
                 raise ValueError(
                     "JWT_SECRET must be set explicitly when ENVIRONMENT=production. "
                     "The default development secret is forbidden in production."
+                )
+            if self.internal_service_token == self._DEFAULT_INTERNAL_TOKEN:
+                raise ValueError(
+                    "INTERNAL_SERVICE_TOKEN must be set explicitly when "
+                    "ENVIRONMENT=production. The default development value "
+                    "is forbidden in production."
                 )
             if self.seed_demo_user:
                 raise ValueError(
