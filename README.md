@@ -198,18 +198,18 @@ aegis-ai/
 
 ## Phase 1
 
-- [ ] Authentication
-- [ ] Organizations
-- [ ] PostgreSQL
-- [ ] React Frontend
-- [ ] Docker Environment
+- [x] Authentication
+- [x] Organizations
+- [x] PostgreSQL
+- [x] React Frontend
+- [x] Docker Environment
 
 ## Phase 2
 
-- [ ] Document Upload
-- [ ] RAG Pipeline
-- [ ] AI Chat
-- [ ] Conversation History
+- [x] Document Upload
+- [x] RAG Pipeline
+- [x] AI Chat
+- [x] Conversation History
 
 ## Phase 3
 
